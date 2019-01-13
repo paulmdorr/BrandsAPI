@@ -1,0 +1,27 @@
+{
+  "name": "brandsapi",
+  "version": "0.1.0",
+  "description": "A brand microservice for tech practice",
+  "main": "dist/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest",
+    "start": "tsc && node dist/index.js"
+  },
+  "author": "Paul M Dorr",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^23.3.12",
+    "@types/node": "^10.12.18",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.2",
+    "typescript-tslint-plugin": "^0.2.1"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
