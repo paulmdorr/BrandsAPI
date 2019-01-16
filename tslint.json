@@ -14,7 +14,9 @@
       "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
     },
     "quotemark": [true, "single", "jsx-double"],
-    "semicolon": [true, "never"]
+    "semicolon": [true, "never"],
+    "ordered-imports": false,
+    "object-literal-sort-keys": false
   },
   "jsRules": {
     "max-line-length": {
