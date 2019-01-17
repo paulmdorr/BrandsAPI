@@ -1,7 +1,7 @@
 import { Pool, QueryResult } from 'pg'
-import { IRepository } from './IRepository'
+import { IRepositoryRead } from './IRepositoryRead'
 
-abstract class BaseRepository<T> implements IRepository<T> {
+abstract class BaseRepository<T> implements IRepositoryRead<T> {
   protected table: string
 
   constructor(
@@ -19,18 +19,6 @@ abstract class BaseRepository<T> implements IRepository<T> {
     const res = await this.datasource.query(`SELECT * FROM ${this.table} WHERE id='${id}'`)
 
     return Promise.resolve(new this.modelType(res.rows[0]))
-  }
-
-  public async create(): Promise<T | boolean> {
-    return this.datasource.query('test')
-  }
-
-  public async update(): Promise<T | boolean> {
-    return this.datasource.query('test')
-  }
-
-  public async delete(): Promise<T | boolean> {
-    return this.datasource.query('test')
   }
 }
 
