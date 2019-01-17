@@ -6,21 +6,29 @@ import BaseRepository from './BaseRepository'
 class CategoryRepository extends BaseRepository<Category> implements IRepositoryWrite<Category> {
   protected table: string = 'categories'
 
-  public async create(item: Category): Promise<Category | boolean> {
-    const query = `INSERT INTO ${this.table}(name) VALUES('${item.name}') RETURNING id`
+  public async create(data: Category): Promise<Category | boolean> {
+    const query = `INSERT INTO ${this.table}(name) VALUES('${data.name}') RETURNING id`
     const res = await this.datasource.query(query)
 
-    item.id = res.rows[0].id
+    data.id = res.rows[0].id
 
-    return Promise.resolve(new Category(item))
+    return Promise.resolve(new Category(data))
   }
 
-  public async update(id: string, item: Category): Promise<Category | boolean> {
-    return this.datasource.query('test')
+  public async update(id: string, data: Category): Promise<Category | boolean> {
+    const query = `UPDATE ${this.table}
+      SET name='${data.name}'
+      WHERE id='${id}' RETURNING *`
+    const res = await this.datasource.query(query)
+
+    return Promise.resolve(new Category(res.rows[0]))
   }
 
   public async delete(id: string): Promise<boolean> {
-    return this.datasource.query('test')
+    const query = `DELETE FROM ${this.table} WHERE id='${id}'`
+    const res = await this.datasource.query(query)
+
+    return Promise.resolve(true)
   }
 }
 

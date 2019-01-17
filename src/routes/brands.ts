@@ -21,9 +21,23 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const brands = await brandRepository.create(req.body)
+  const brand = await brandRepository.create(req.body)
 
-  res.send(brands)
+  res.send(brand)
+})
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params
+  const brand = await brandRepository.update(id, req.body)
+
+  res.send(brand)
+})
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params
+  const brand = await brandRepository.delete(id)
+
+  res.send(brand)
 })
 
 export default router

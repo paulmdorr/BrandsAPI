@@ -26,4 +26,18 @@ router.post('/', async (req, res) => {
   res.send(category)
 })
 
+router.put('/:id', async (req, res) => {
+  const { id } = req.params
+  const brand = await categoryRepository.update(id, req.body)
+
+  res.send(brand)
+})
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params
+  const brand = await categoryRepository.delete(id)
+
+  res.send(brand)
+})
+
 export default router

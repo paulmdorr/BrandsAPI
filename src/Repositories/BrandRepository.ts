@@ -14,22 +14,30 @@ class BrandRepository extends BaseRepository<Brand> implements IRepositoryWrite<
     return Promise.resolve(res.rows.map((row) => new Brand(row)))
   }
 
-  public async create(item: Brand): Promise<Brand | boolean> {
+  public async create(data: Brand): Promise<Brand | boolean> {
     const query = `INSERT INTO ${this.table}(name, category_id)
-      VALUES('${item.name}', '${item.categoryId}') RETURNING id`
+      VALUES('${data.name}', '${data.categoryId}') RETURNING id`
     const res = await this.datasource.query(query)
 
-    item.id = res.rows[0].id
+    data.id = res.rows[0].id
 
-    return Promise.resolve(new Brand(item))
+    return Promise.resolve(new Brand(data))
   }
 
-  public async update(id: string, item: Brand): Promise<Brand | boolean> {
-    return this.datasource.query('test')
+  public async update(id: string, data: Brand): Promise<Brand | boolean> {
+    const query = `UPDATE ${this.table}
+      SET name='${data.name}', category_id='${data.categoryId}'
+      WHERE id='${id}' RETURNING *`
+    const res = await this.datasource.query(query)
+
+    return Promise.resolve(new Brand(res.rows[0]))
   }
 
   public async delete(id: string): Promise<boolean> {
-    return this.datasource.query('test')
+    const query = `DELETE FROM ${this.table} WHERE id='${id}'`
+    const res = await this.datasource.query(query)
+
+    return Promise.resolve(true)
   }
 }
 
