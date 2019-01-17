@@ -7,7 +7,6 @@ const router = Router()
 const brandRepository = new BrandRepository(Brand, pool)
 
 router.get('/', async (req, res) => {
-  const { id } = req.params
   const brands = await brandRepository.findAll()
 
   res.send(brands)

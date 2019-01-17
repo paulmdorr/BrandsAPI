@@ -7,7 +7,6 @@ const router = Router()
 const categoryRepository = new CategoryRepository(Category, pool)
 
 router.get('/', async (req, res) => {
-  const { id } = req.params
   const categories = await categoryRepository.findAll()
 
   res.send(categories)
