@@ -9,8 +9,8 @@ class Brand implements IBrand {
   public name: string
   public categoryId: number
 
-  constructor(data: IBrand) {
-    Object.assign(this, data)
+  constructor(data: any) {
+    Object.assign(this, { categoryId: data.category_id }, data)
   }
 
   public toJSON() {
