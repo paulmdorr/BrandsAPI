@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', [
-    sanitizeParam('id').escape(),
+    sanitizeParam('id').escape().trim(),
   ], async (req, res) => {
   const { id } = req.params
   const categories = await categoryRepository.find(id)
@@ -23,7 +23,7 @@ router.get('/:id', [
 })
 
 router.post('/', [
-    sanitizeBody('name').escape(),
+    sanitizeBody('name').escape().trim(),
   ], async (req, res) => {
   const category = await categoryRepository.create(req.body)
 
@@ -31,8 +31,8 @@ router.post('/', [
 })
 
 router.put('/:id',  [
-  sanitizeParam('id').escape(),
-  sanitizeBody('name').escape(),
+  sanitizeParam('id').escape().trim(),
+  sanitizeBody('name').escape().trim(),
 ], async (req, res) => {
   const { id } = req.params
   const brand = await categoryRepository.update(id, req.body)
@@ -41,7 +41,7 @@ router.put('/:id',  [
 })
 
 router.delete('/:id', [
-    sanitizeParam('id').escape(),
+    sanitizeParam('id').escape().trim(),
   ], async (req, res) => {
   const { id } = req.params
   const brand = await categoryRepository.delete(id)

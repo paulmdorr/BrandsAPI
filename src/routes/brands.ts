@@ -14,17 +14,21 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', [
-    sanitizeParam('id').escape(),
-  ], async (req, res) => {
+    sanitizeParam('id').escape().trim(),
+  ], async (req, res, next) => {
   const { id } = req.params
-  const brands = await brandRepository.find(id)
 
-  res.send(brands)
+  try {
+    const brands = await brandRepository.find(id)
+    res.send(brands)
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.post('/', [
-    sanitizeBody('name').escape(),
-    sanitizeBody('categoryId').escape(),
+    sanitizeBody('name').escape().trim(),
+    sanitizeBody('categoryId').escape().trim(),
   ], async (req, res) => {
   const brand = await brandRepository.create(req.body)
 
@@ -32,9 +36,9 @@ router.post('/', [
 })
 
 router.put('/:id', [
-    sanitizeParam('id').escape(),
-    sanitizeBody('name').escape(),
-    sanitizeBody('categoryId').escape(),
+    sanitizeParam('id').escape().trim(),
+    sanitizeBody('name').escape().trim(),
+    sanitizeBody('categoryId').escape().trim(),
   ], async (req, res) => {
   const { id } = req.params
   const brand = await brandRepository.update(id, req.body)
@@ -43,7 +47,7 @@ router.put('/:id', [
 })
 
 router.delete('/:id', [
-    sanitizeParam('id').escape(),
+    sanitizeParam('id').escape().trim(),
   ], async (req, res) => {
   const { id } = req.params
   const brand = await brandRepository.delete(id)
