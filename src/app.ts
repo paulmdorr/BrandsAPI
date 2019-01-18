@@ -4,7 +4,9 @@ import categories from './routes/categories'
 import { json as jsonParser } from 'body-parser'
 import morgan = require('morgan')
 import httperrors = require('httperrors')
+import swaggerUi = require('swagger-ui-express')
 
+const swaggerDocument = require('../docs/brandsAPI.json')
 const app = express()
 const router = express.Router()
 
@@ -17,6 +19,8 @@ router.get('/', (req, res) => {
 })
 
 app.use(morgan(':remote-addr - [:date[clf]] :method :url :status :res[content-length] - :response-time ms'))
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use((req, res, next) => {
   // Here should be the auth lib that checks the JWT against the auth service
