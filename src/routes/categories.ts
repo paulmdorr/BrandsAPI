@@ -1,4 +1,5 @@
 import Router from 'express-promise-router'
+import { sanitizeParam, sanitizeBody } from 'express-validator/filter'
 import Category from '../Models/Category'
 import CategoryRepository from '../Repositories/CategoryRepository'
 import pool from '../db'
@@ -12,27 +13,36 @@ router.get('/', async (req, res) => {
   res.send(categories)
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', [
+    sanitizeParam('id').escape(),
+  ], async (req, res) => {
   const { id } = req.params
   const categories = await categoryRepository.find(id)
 
   res.send(categories)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', [
+    sanitizeBody('name').escape(),
+  ], async (req, res) => {
   const category = await categoryRepository.create(req.body)
 
   res.send(category)
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',  [
+  sanitizeParam('id').escape(),
+  sanitizeBody('name').escape(),
+], async (req, res) => {
   const { id } = req.params
   const brand = await categoryRepository.update(id, req.body)
 
   res.send(brand)
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [
+    sanitizeParam('id').escape(),
+  ], async (req, res) => {
   const { id } = req.params
   const brand = await categoryRepository.delete(id)
 
