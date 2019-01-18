@@ -1,4 +1,4 @@
-import { Pool, QueryResult } from 'pg'
+import httpErrors = require('httperrors')
 import { IRepositoryRead } from './IRepositoryRead'
 
 abstract class BaseRepository<T> implements IRepositoryRead<T> {
@@ -10,15 +10,31 @@ abstract class BaseRepository<T> implements IRepositoryRead<T> {
   ) {}
 
   public async findAll(): Promise<T[]> {
-    const res = await this.datasource.query(`SELECT * FROM ${this.table}`)
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await this.datasource.query(`SELECT * FROM ${this.table}`)
 
-    return Promise.resolve(res.rows.map((row) => new this.modelType(row)))
+        resolve(res.rows.map((row) => new this.modelType(row)))
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
-  public async find(id: string): Promise<T | boolean> {
-    const res = await this.datasource.query(`SELECT * FROM ${this.table} WHERE id='${id}'`)
+  public async find(id: string): Promise<T> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await this.datasource.query(`SELECT * FROM ${this.table} WHERE id='${id}'`)
 
-    return Promise.resolve(res.rowCount === 1 ? new this.modelType(res.rows[0]) : false)
+        if (res.rowCount < 1) {
+          reject(new httpErrors.NotFound(`${this.modelType.name} with id ${id} not found`))
+        }
+
+        resolve(new this.modelType(res.rows[0]))
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 }
 
