@@ -18,6 +18,14 @@ router.get('/', (req, res) => {
 
 app.use(morgan(':remote-addr - [:date[clf]] :method :url :status :res[content-length] - :response-time ms'))
 
+app.use((req, res, next) => {
+  // Here should be the auth lib that checks the JWT against the auth service
+  if (!req.headers.authorization) {
+    next(httperrors(403))
+  }
+  next()
+})
+
 app.use('/', router)
 app.use('/brands', brands)
 app.use('/categories', categories)
