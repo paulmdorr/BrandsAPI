@@ -24,7 +24,19 @@
 			"name": "category",
 			"description": "Categories endpoints"
 		}
-	],
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security":{
+    "bearerAuth": []
+  },
 	"paths": {
 		"/brand": {
 			"get": {
