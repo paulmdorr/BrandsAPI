@@ -15,10 +15,10 @@ abstract class BaseRepository<T> implements IRepositoryRead<T> {
     return Promise.resolve(res.rows.map((row) => new this.modelType(row)))
   }
 
-  public async find(id: string): Promise<T> {
+  public async find(id: string): Promise<T | boolean> {
     const res = await this.datasource.query(`SELECT * FROM ${this.table} WHERE id='${id}'`)
 
-    return Promise.resolve(new this.modelType(res.rows[0]))
+    return Promise.resolve(res.rowCount === 1 ? new this.modelType(res.rows[0]) : false)
   }
 }
 
