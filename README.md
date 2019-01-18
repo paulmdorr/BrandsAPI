@@ -7,18 +7,17 @@ A personal sandbox with the objective of testing new technologies.
 Before running the server, you need a PostgreSQL server with a database created using the script included in the folder *db*. In order to connect to the DB from the service, you need to specify the necessary environment variables, like this:
 
 ```bash
-PGUSER=dbuser \
-PGHOST=database.server.com \
-PGPASSWORD=secretpassword \
-PGDATABASE=mydb \
-PGPORT=3211 \
-yarn start
+$ PGUSER=dbuser \
+  PGHOST=database.server.com \
+  PGPASSWORD=secretpassword \
+  PGDATABASE=mydb \
+  PGPORT=3211 \
+  yarn start
 ```
 
 ## Running dev server
 
 ```bash
-bash
 yarn install
 yarn start
 ```
