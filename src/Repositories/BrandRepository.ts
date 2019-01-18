@@ -1,20 +1,26 @@
 import httpErrors = require('httperrors')
 import { IRepositoryWrite } from './IRepositoryWrite'
-import Brand from '../Models/Brand'
+import Brand, { IBrand } from '../Models/Brand'
 import BaseRepository from './BaseRepository'
 
 class BrandRepository extends BaseRepository<Brand> implements IRepositoryWrite<Brand> {
   protected table: string = 'brands'
 
   public async findByCategoryId(categoryId: string): Promise<Brand[]> {
-    const res = await this.datasource.query(
-      `SELECT * FROM ${this.table} WHERE category_id = '${categoryId}'`,
-    )
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await this.datasource.query(
+          `SELECT * FROM ${this.table} WHERE category_id = '${categoryId}'`,
+        )
 
-    return Promise.resolve(res.rows.map((row) => new Brand(row)))
+        resolve(res.rows.map((row) => new Brand(row)))
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
-  public async create(data: Brand): Promise<Brand> {
+  public async create(data: IBrand): Promise<Brand> {
     return new Promise(async (resolve, reject) => {
       try {
         const query = `INSERT INTO ${this.table}(name, category_id)
@@ -30,7 +36,7 @@ class BrandRepository extends BaseRepository<Brand> implements IRepositoryWrite<
     })
   }
 
-  public async update(id: string, data: Brand): Promise<Brand> {
+  public async update(id: string, data: IBrand): Promise<Brand> {
     return new Promise(async (resolve, reject) => {
       try {
         const query = `UPDATE ${this.table}

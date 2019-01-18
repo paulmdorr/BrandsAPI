@@ -1,5 +1,5 @@
 import Router from 'express-promise-router'
-import { sanitizeParam, sanitizeBody } from 'express-validator/filter'
+import { sanitizeParam, sanitizeBody, sanitizeQuery } from 'express-validator/filter'
 import Brand from '../Models/Brand'
 import BrandRepository from '../Repositories/BrandRepository'
 import pool from '../db'
@@ -7,8 +7,14 @@ import pool from '../db'
 const router = Router()
 const brandRepository = new BrandRepository(Brand, pool)
 
-router.get('/', async (req, res) => {
-  const brands = await brandRepository.findAll()
+router.get('/', [
+    sanitizeQuery('categoryId').escape().trim(),
+  ], async (req, res) => {
+  // ?categoryId= filters by category
+  const { categoryId } = req.query
+  const brands = categoryId !== undefined ?
+    await brandRepository.findByCategoryId(categoryId) :
+    await brandRepository.findAll()
 
   res.send(brands)
 })
