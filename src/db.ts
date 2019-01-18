@@ -1,12 +1,6 @@
 import { Pool } from 'pg'
 
-const pool = new Pool({
-  database: 'brands',
-  host: 'localhost',
-  password: 'asF3T=1gat',
-  port: 5432,
-  user: 'postgres',
-})
+const pool = new Pool()
 
 export default {
   query: (text, params) => pool.query(text, params),
