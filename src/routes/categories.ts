@@ -1,14 +1,22 @@
 import Router from 'express-promise-router'
-import { sanitizeParam, sanitizeBody } from 'express-validator/filter'
+import { sanitizeParam, sanitizeBody, sanitizeQuery } from 'express-validator/filter'
 import Category from '../Models/Category'
 import CategoryRepository from '../Repositories/CategoryRepository'
 import pool from '../db'
+import { IPagination } from '../Repositories/IRepositoryRead'
 
 const router = Router()
 const categoryRepository = new CategoryRepository(Category, pool)
 
-router.get('/', async (req, res) => {
-  const categories = await categoryRepository.findAll()
+router.get('/', [
+  sanitizeQuery('limit').escape().trim(),
+  sanitizeQuery('offset').escape().trim(),
+],  async (req, res) => {
+  const pagination: IPagination = {
+    limit: req.query.limit || 20,
+    offset: req.query.offset || 0,
+  }
+  const categories = await categoryRepository.findAll(pagination)
 
   res.send(categories)
 })

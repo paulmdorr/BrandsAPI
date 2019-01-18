@@ -3,18 +3,25 @@ import { sanitizeParam, sanitizeBody, sanitizeQuery } from 'express-validator/fi
 import Brand from '../Models/Brand'
 import BrandRepository from '../Repositories/BrandRepository'
 import pool from '../db'
+import { IPagination } from '../Repositories/IRepositoryRead'
 
 const router = Router()
 const brandRepository = new BrandRepository(Brand, pool)
 
 router.get('/', [
     sanitizeQuery('categoryId').escape().trim(),
+    sanitizeQuery('limit').escape().trim(),
+    sanitizeQuery('offset').escape().trim(),
   ], async (req, res) => {
+  const pagination: IPagination = {
+    limit: req.query.limit || 20,
+    offset: req.query.offset || 0,
+  }
   // ?categoryId= filters by category
   const { categoryId } = req.query
   const brands = categoryId !== undefined ?
-    await brandRepository.findByCategoryId(categoryId) :
-    await brandRepository.findAll()
+    await brandRepository.findByCategoryId(categoryId, pagination) :
+    await brandRepository.findAll(pagination)
 
   res.send(brands)
 })

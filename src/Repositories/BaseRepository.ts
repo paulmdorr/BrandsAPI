@@ -1,5 +1,5 @@
 import httpErrors = require('httperrors')
-import { IRepositoryRead } from './IRepositoryRead'
+import { IRepositoryRead, IPagination } from './IRepositoryRead'
 
 abstract class BaseRepository<T> implements IRepositoryRead<T> {
   protected table: string
@@ -9,10 +9,12 @@ abstract class BaseRepository<T> implements IRepositoryRead<T> {
     protected datasource: any,
   ) {}
 
-  public async findAll(): Promise<T[]> {
+  public async findAll(pagination: IPagination): Promise<T[]> {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await this.datasource.query(`SELECT * FROM ${this.table}`)
+        const res = await this.datasource.query(
+          `SELECT * FROM ${this.table} LIMIT ${pagination.limit} OFFSET ${pagination.offset}`,
+        )
 
         resolve(res.rows.map((row) => new this.modelType(row)))
       } catch (error) {

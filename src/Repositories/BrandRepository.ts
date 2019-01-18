@@ -2,15 +2,17 @@ import httpErrors = require('httperrors')
 import { IRepositoryWrite } from './IRepositoryWrite'
 import Brand, { IBrand } from '../Models/Brand'
 import BaseRepository from './BaseRepository'
+import { IPagination } from './IRepositoryRead'
 
 class BrandRepository extends BaseRepository<Brand> implements IRepositoryWrite<Brand> {
   protected table: string = 'brands'
 
-  public async findByCategoryId(categoryId: string): Promise<Brand[]> {
+  public async findByCategoryId(categoryId: string, pagination: IPagination): Promise<Brand[]> {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await this.datasource.query(
-          `SELECT * FROM ${this.table} WHERE category_id = '${categoryId}'`,
+          `SELECT * FROM ${this.table} WHERE category_id = '${categoryId}'
+           LIMIT ${pagination.limit} OFFSET ${pagination.offset}`,
         )
 
         resolve(res.rows.map((row) => new Brand(row)))
