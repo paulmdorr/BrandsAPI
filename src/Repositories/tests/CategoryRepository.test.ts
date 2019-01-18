@@ -1,9 +1,11 @@
 import CategoryRepository from '../CategoryRepository'
 import Category from '../../Models/Category'
+import { IPagination } from '../IRepositoryRead'
 
 let result
 let categoryRepository: CategoryRepository
 let brokenCategoryRepository: CategoryRepository
+let pagination: IPagination
 
 beforeEach(() => {
   const mockCategoryRepository = (res) => {
@@ -31,16 +33,17 @@ beforeEach(() => {
 
   categoryRepository = mockCategoryRepository(result)
   brokenCategoryRepository = brokenMockCategoryRepository(result)
+  pagination = {limit: 20, offset: 0}
 })
 
 describe('CategoryRepository tests', () => {
   test('finds all the categories', async () => {
-    const res = await categoryRepository.findAll()
+    const res = await categoryRepository.findAll(pagination)
 
     expect(res[0] instanceof Category).toBe(true)
     expect(res).toMatchObject(result.rows)
 
-    await expect(brokenCategoryRepository.findAll()).rejects.toMatchObject({
+    await expect(brokenCategoryRepository.findAll(pagination)).rejects.toMatchObject({
       message: '',
     })
   })

@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "nodemon --inspect=5858 -r ts-node/register src/index.ts"
+    "start": "nodemon --inspect=5858 -r ts-node/register src/index.ts",
+    "build": "tsc"
   },
   "author": "Paul M Dorr",
   "license": "MIT",

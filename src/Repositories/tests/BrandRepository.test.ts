@@ -1,9 +1,11 @@
 import BrandRepository from '../BrandRepository'
 import Brand from '../../Models/Brand'
+import { IPagination } from '../IRepositoryRead'
 
 let result
 let brandRepository: BrandRepository
 let brokenBrandRepository: BrandRepository
+let pagination: IPagination
 
 beforeEach(() => {
   const mockBrandRepository = (res) => {
@@ -32,16 +34,17 @@ beforeEach(() => {
 
   brandRepository = mockBrandRepository(result)
   brokenBrandRepository = brokenMockBrandRepository(result)
+  pagination = {limit: 20, offset: 0}
 })
 
 describe('BrandRepository tests', () => {
   test('finds all the brands', async () => {
-    const res = await brandRepository.findAll()
+    const res = await brandRepository.findAll(pagination)
 
     expect(res[0] instanceof Brand).toBe(true)
     expect(res).toMatchObject(result.rows)
 
-    await expect(brokenBrandRepository.findAll()).rejects.toMatchObject({
+    await expect(brokenBrandRepository.findAll(pagination)).rejects.toMatchObject({
       message: '',
     })
   })
@@ -63,11 +66,11 @@ describe('BrandRepository tests', () => {
   })
 
   test('finds all the brands by category id', async () => {
-    const res = await brandRepository.findByCategoryId('1')
+    const res = await brandRepository.findByCategoryId('1', pagination)
 
     expect(res).toMatchObject(result.rows)
 
-    await expect(brokenBrandRepository.findByCategoryId('0')).rejects.toMatchObject({
+    await expect(brokenBrandRepository.findByCategoryId('0', pagination)).rejects.toMatchObject({
       message: '',
     })
   })
